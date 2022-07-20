@@ -36,11 +36,11 @@ jobs:
           command: 
             touch inventory 
             echo [all] > ~/inventor.txt 
+            cat ~/inventory.txt
             # aws ec2 describe-instances \
             # --query 'Reservations[*].Instances[*].PublicIpAddress' \
             # --filters "Name=tag:Project,Values=udacity" \
             # --output text >> ~/inventory.txt
-            cat ~/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
