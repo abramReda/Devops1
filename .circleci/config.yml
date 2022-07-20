@@ -1,13 +1,29 @@
 
 version: 2.1
 
+commands:
+  install-ansible:
+    description: Installs Ansible
+    steps:
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+  
+  install-utility:
+    description: install utility to work with workspace
+    - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip
 
 jobs:
   create_infrastructure: 
     docker:
-      - image: circleci/aws-cli
+      - image: amazon/aws-cli:latest #check this if working or not
     steps:
       - checkout
+      - install-utility
       - run:
           name: Create Cloudformation Stack
           command: |
@@ -37,17 +53,15 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              fingerprints: ["27:b4:3c:a3:91:97:9a:04:5c:58:16:4b:a0:aa:1a:70"] 
+              fingerprints: ["27:b4:3c:a3:91:97:9a:04:5c:58:16:4b:a0:aa:1a:70"]
+      - install-utility
       - attach_workspace:
           at: ~/
-      - run: cat ~/inventory
-      - run:
-          name: Install Ansible
-          command: |
-            apk add --update ansible
+      - install-ansible
       - run:
           name: Run Playbook and Configure server
           command: |
+            cat ~/inventory
             ansible-playbook -i ~/inventory main.yml
 
 workflows:
