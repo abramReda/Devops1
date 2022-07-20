@@ -41,7 +41,7 @@ jobs:
             touch inventory.txt &
             echo [all] > inventory.txt &
             pwd &
-            aws ec2 describe-instances --filters "Name=tag:Project,Values=udacity" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt &
+            aws ec2 describe-instances --filters "Name=tag:Project,Values=udacity" --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> inventory.txt &
             cat inventory.txt 
       - persist_to_workspace:
           root: ~/
