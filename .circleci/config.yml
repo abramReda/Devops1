@@ -28,25 +28,25 @@ jobs:
     steps:
       - checkout
       - install-utility
-      # - run:
-      #     name: Create Cloudformation Stack
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file template.yml \
-      #         --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-      #         --region us-east-1
       - run:
-          name: get public ip of created instaces
-          command: 
-            touch inventory.txt &
-            echo [all] > inventory.txt &
-            pwd &
-            aws ec2 describe-instances --filters "Name=tag:Project,Values=udacity" --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> inventory.txt &
-            cat inventory.txt 
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/inventory.txt
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
+      # - run:
+      #     name: get public ip of created instaces
+      #     command: 
+      #       touch inventory.txt &
+      #       echo [all] > inventory.txt &
+      #       pwd &
+      #       aws ec2 describe-instances --filters "Name=tag:Project,Values=udacity" --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> inventory.txt &
+      #       cat inventory.txt 
+      # - persist_to_workspace:
+      #     root: ~/
+      #     paths:
+      #       - project/inventory.txt
 
 
   configure_infrastructure: 
@@ -64,13 +64,11 @@ jobs:
           command: |
             pwd &
             ls &
-            cat ~/project/inventory.txt &
-            ansible-playbook -i ~/project/inventory.txt main.yml
+            cat inventory &
+            ansible-playbook -i inventory main.yml
 
 workflows:
   my_workflow:
       jobs:
-        - create_infrastructure
-        - configure_infrastructure:
-            requires:
-              - create_infrastructure
+        #- create_infrastructure
+        - configure_infrastructure
