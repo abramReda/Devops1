@@ -9,13 +9,13 @@ commands:
           name: Install Ansible
           command: |
             apk add --update ansible
-  
   install-utility:
     description: install utility to work with workspace
-    - run:
-          name: Install tar utility
-          command: |
-            yum install -y tar gzip
+    steps:
+      - run:
+            name: Install tar utility
+            command: |
+              yum install -y tar gzip
 
 jobs:
   create_infrastructure: 
