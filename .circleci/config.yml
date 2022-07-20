@@ -33,9 +33,10 @@ jobs:
       - run:
           name: get public ip of created instaces
           command: 
-            touch inventory &
+            touch inventory.txt &
             echo [all] > inventor.txt &
             echo test & 
+            ls &
             cat inventory.txt 
             # aws ec2 describe-instances \
             # --query 'Reservations[*].Instances[*].PublicIpAddress' \
