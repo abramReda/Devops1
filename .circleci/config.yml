@@ -87,7 +87,7 @@ jobs:
           name: smoke test
           # Fail the job intentionally to simulate an error
           command:  return 1
-      - destroy_environment:
+      - destroy_environment
         when on_fail
 
 workflows:
