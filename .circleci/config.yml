@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   create_infrastructure: 
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/aws-cli
     steps:
       - checkout
       - run:
@@ -17,13 +17,14 @@ jobs:
               --region us-east-1
       - run:
           name: get public ip of created instaces
-          command: |
-            touch inventory |
-            echo [all] > inventor |
+          command: 
+            touch inventory 
+            echo [all] > inventor 
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Project,Values=udacity" \
             --output text >> inventory
+            cat inventory
       - persist_to_workspace:
           root: ~/
           paths:
