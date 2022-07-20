@@ -36,7 +36,7 @@ jobs:
           command: 
             touch inventory 
             echo [all] > inventor.txt 
-            cat inventory.txt
+            cat inventory.txt > echo
             # aws ec2 describe-instances \
             # --query 'Reservations[*].Instances[*].PublicIpAddress' \
             # --filters "Name=tag:Project,Values=udacity" \
@@ -44,7 +44,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - inventory.txt
+            - project/inventory.txt
 
 
   configure_infrastructure: 
