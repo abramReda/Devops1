@@ -15,6 +15,19 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
+      - run:
+          name: get public ip of created instaces
+          command: |
+            touch inventory |
+            echo [all] > inventor |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Project,Values=udacity" \
+            --output text >> inventory
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - inventory
 
 
   configure_infrastructure: 
@@ -23,7 +36,10 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              fingerprints: ["bf:c1:df:a0:bd:4e:87:3b:c7:0f:f1:cd:78:f2:55:f9"] 
+              fingerprints: ["27:b4:3c:a3:91:97:9a:04:5c:58:16:4b:a0:aa:1a:70"] 
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/inventory
       - run:
           name: Install Ansible
           command: |
@@ -31,10 +47,12 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i inventory main.yml
+            ansible-playbook -i ~/inventory main.yml
 
 workflows:
   my_workflow:
       jobs:
-        #- create_infrastructure
+        - create_infrastructure
         - configure_infrastructure
+            requires:
+              - create_infrastructure

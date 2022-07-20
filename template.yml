@@ -8,11 +8,16 @@ Resources:
       SecurityGroups:
         - !Ref InstanceSecurityGroup
       # Change this, as applicable to you      
-      KeyName: udacity
+      KeyName: ibramRedaKey
       # Change this, as applicable to you
       # You may need to find out what instance types are available in your region - use https://cloud-images.ubuntu.com/locator/ec2/
       ImageId: 'ami-052efd3df9dad4825' 
       InstanceType: t2.micro
+      Tags: 
+        - Key: "Project"
+          Value: "udacity"
+
+
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -21,4 +26,8 @@ Resources:
         - IpProtocol: tcp
           FromPort: '22'
           ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '3000'
+          ToPort: '3000'
           CidrIp: 0.0.0.0/0 
