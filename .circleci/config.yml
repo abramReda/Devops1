@@ -20,10 +20,9 @@ commands:
 jobs:
   create_infrastructure: 
     docker:
-      - image: amazon/aws-cli:latest #check this if working or not
+      - image: cimg/aws:2022.06
     steps:
       - checkout
-      - install-utility
       # - run:
       #     name: Create Cloudformation Stack
       #     command: |
@@ -34,9 +33,10 @@ jobs:
       - run:
           name: get public ip of created instaces
           command: 
-            touch inventory 
-            echo [all] > inventor.txt 
-            cat inventory.txt > echo
+            touch inventory &
+            echo [all] > inventor.txt &
+            echo test & 
+            cat inventory.txt 
             # aws ec2 describe-instances \
             # --query 'Reservations[*].Instances[*].PublicIpAddress' \
             # --filters "Name=tag:Project,Values=udacity" \
@@ -49,19 +49,18 @@ jobs:
 
   configure_infrastructure: 
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/python:3.10.5
     steps:
       - checkout
       - add_ssh_keys:
               fingerprints: ["27:b4:3c:a3:91:97:9a:04:5c:58:16:4b:a0:aa:1a:70"]
-      - install-utility
       - attach_workspace:
           at: ~/
       - install-ansible
       - run:
           name: Run Playbook and Configure server
           command: |
-            cat inventory
+            cat ~/project/inventory.txt &
             ansible-playbook -i inventory main.yml
 
 workflows:
