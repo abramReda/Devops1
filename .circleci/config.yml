@@ -24,9 +24,10 @@ commands:
 jobs:
   create_infrastructure: 
     docker:
-      - image: cimg/aws:2022.06
+      - image: amazon/aws-cli:latest
     steps:
       - checkout
+      - install-utility
       - run:
           name: Create Cloudformation Stack
           command: |
